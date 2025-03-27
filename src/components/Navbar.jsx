@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { logout , deleteAccount } from '../store/userSlice';
+import { logout, deleteAccount } from '../store/userSlice';
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -20,43 +20,39 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <div className="flex items-center">
-        <img 
-          src="/api/placeholder/100/50" 
-          alt="Algo Root Logo" 
-          className="h-10"
-        />
+    <nav className="bg-black text-white shadow-md p-4 flex justify-between items-center border-b border-white">
+      <div className="flex items-center text-2xl font-bold">
+        Algo Root
       </div>
-      
+
       <div className="relative">
-        <button 
+        <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center focus:outline-none"
+          className="focus:outline-none transform transition-transform hover:scale-105 cursor-pointer"
         >
-          <img 
-            src="/api/placeholder/40/40" 
-            alt="User" 
-            className="rounded-full w-10 h-10"
+          <img
+            src="/api/placeholder/40/40"
+            alt="User"
+            className="rounded-full w-10 h-10 border-2 border-white"
           />
         </button>
-        
+
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-xl z-20">
-            <div className="p-3 border-b">
+          <div className="absolute right-0 mt-2 w-48 bg-black border border-white rounded-lg shadow-xl z-20">
+            <div className="p-3 border-b border-white">
               <p className="font-bold">{user?.username}</p>
-              <p className="text-sm text-gray-500">{user?.email}</p>
+              <p className="text-sm text-gray-300">{user?.email}</p>
             </div>
             <ul>
-              <li 
+              <li
                 onClick={handleLogout}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-white hover:text-black cursor-pointer"
               >
                 Logout
               </li>
-              <li 
+              <li
                 onClick={handleDeleteAccount}
-                className="px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer"
+                className="px-4 py-2 hover:bg-white hover:text-black text-red-400 cursor-pointer"
               >
                 Delete Account
               </li>

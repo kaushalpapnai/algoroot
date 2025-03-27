@@ -14,23 +14,23 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-white shadow-md h-full fixed left-0 top-0 pt-16">
+    <div className="w-64 bg-gray-900 shadow-2xl h-full fixed left-0 top-0 pt-16">
       <nav className="p-4">
         <ul>
           {menuItems.map((item) => (
-            <li 
+            <li
               key={item.path}
-              className={`mb-2 ${
-                location.pathname === item.path 
-                  ? 'bg-blue-100 text-blue-600' 
-                  : 'hover:bg-gray-100'
-              } rounded-lg`}
+              className={`mb-2 rounded-lg transition-all duration-300 ${
+                location.pathname === item.path
+                  ? 'bg-white text-black'
+                  : 'hover:bg-gray-800 text-gray-300 hover:text-white'
+              }`}
             >
-              <Link 
-                to={item.path} 
-                className="flex items-center p-3"
+              <Link
+                to={item.path}
+                className="flex items-center p-3 font-semibold"
               >
-                <span className="mr-3">{item.icon}</span>
+                <span className="mr-3 text-xl">{item.icon}</span>
                 {item.name}
               </Link>
             </li>
