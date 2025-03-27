@@ -1,0 +1,145 @@
+import React, { useState, useMemo } from 'react';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+
+// Mock data (you can replace this with an API call)
+const MOCK_DATA = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', age: 28, status: 'Active' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', age: 34, status: 'Inactive' },
+  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', age: 45, status: 'Active' },
+  // Add more mock data as needed
+];
+
+const DetailsPage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Sorting function
+  const sortedData = useMemo(() => {
+    let sortableItems = [...MOCK_DATA];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [sortConfig]);
+
+  // Filtering function
+  const filteredData = useMemo(() => {
+    return sortedData.filter(item => 
+      Object.values(item).some(val => 
+        val.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [sortedData, searchTerm]);
+
+  // Pagination
+  const paginatedData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return filteredData.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, filteredData]);
+
+  // Sorting handler
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return (
+    <div className="flex">
+      <Sidebar />
+      <div className="ml-64 w-full">
+        <Navbar />
+        <div className="p-6">
+          <h1 className="text-2xl font-bold mb-6">Details</h1>
+          
+          {/* Search and Filtering */}
+          <div className="mb-4 flex justify-between">
+            <input 
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="p-2 border rounded w-full max-w-md"
+            />
+          </div>
+
+          {/* Data Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+              <thead className="bg-gray-100">
+                <tr>
+                  {Object.keys(MOCK_DATA[0]).map((key) => (
+                    <th 
+                      key={key}
+                      onClick={() => handleSort(key)}
+                      className="p-3 text-left cursor-pointer hover:bg-gray-200"
+                    >
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                      {sortConfig.key === key && (
+                        <span className="ml-2">
+                          {sortConfig.direction === 'ascending' ? '▲' : '▼'}
+                        </span>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedData.map((item) => (
+                  <tr key={item.id} className="border-b hover:bg-gray-50">
+                    {Object.values(item).map((val, index) => (
+                      <td key={index} className="p-3">{val}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex justify-between items-center mt-4">
+            <span>
+              Page {currentPage} of {Math.ceil(filteredData.length / itemsPerPage)}
+            </span>
+            <div className="space-x-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => 
+                  prev < Math.ceil(filteredData.length / itemsPerPage) 
+                    ? prev + 1 
+                    : prev
+                )}
+                disabled={currentPage >= Math.ceil(filteredData.length / itemsPerPage)}
+                className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DetailsPage;
