@@ -65,7 +65,7 @@ const DetailsPage = () => {
       </div>
       <div className="md:ml-64 w-full">
         <Navbar />
-        <div className="p-4 sm:p-6 md:p-8">
+        <div className="p-4 sm:p-6 md:p-8 mt-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-6 sm:mb-8 text-white tracking-tight">User Details</h1>
           
           {/* Search and Filtering */}
